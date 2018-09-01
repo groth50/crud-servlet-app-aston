@@ -1,0 +1,29 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+.box_info, .box_success, .box_warning, .box_error {
+    margin: 10px 0px;
+    padding:12px;
+
+}
+.box_info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.box_success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.box_warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.box_error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+}
+.box_info i, .box_success i, .box_warning i, .box_error i {
+    margin:10px 22px;
+    font-size:2em;
+    vertical-align:middle;
+}
