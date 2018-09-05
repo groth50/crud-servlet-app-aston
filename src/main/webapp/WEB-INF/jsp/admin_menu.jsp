@@ -16,6 +16,11 @@
     <title>Admin menu</title>
 </head>
 <body>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_menu.jsp"></jsp:include>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_current_user.jsp"></jsp:include>
+<div>
+    Admin menu
+</div>
 
 <form action="/deleteuser" method="post" id="userForm" role="form" >
     <input type="hidden" id="userId" name="userId">

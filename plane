@@ -21,7 +21,7 @@
 1. В какой пакет положить LongId<T>?
 2. Security фильтр и фильтр авторизации, разобраться, в чем разница https://o7planning.org/ru/11071/create-a-simple-login-application-and-secure-pages-with-java-servlet-filter#a11045682
 3. Использовать хэш вместо пассворда и солить хэш. Использовать токены(упрощённо).
-4. Подключить Git
+4.
 5. Подключить логгирование при деплое
 6. завязать через DAO AccountService
 7. Сделать конфиг DB через XML
@@ -157,3 +157,6 @@ public void foo() throws Exception {}
 
 18. Полезные инструменты для тестирования
 https://tproger.ru/translations/12-tools-for-unit-tests/
+
+19. Подключение к гиту
+https://prog.kiev.ua/forum/index.php?topic=1194.0

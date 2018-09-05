@@ -14,6 +14,9 @@
     <title>Update user</title>
 </head>
 <body>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_menu.jsp"></jsp:include>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_current_user.jsp"></jsp:include>
+
 <form action="${pageContext.request.contextPath}/updateuser" method="POST" class="form">
     <input type="hidden" name="oldLogin" value="<c:out value="${user.login}" />">
     <fieldset>

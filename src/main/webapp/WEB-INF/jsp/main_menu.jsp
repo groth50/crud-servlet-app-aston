@@ -11,50 +11,44 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css">
+    <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
     <title>Main menu</title>
 </head>
 <body>
-<div>
-    Main menu
-</div>
-
-<div>
-    <a href="${pageContext.request.contextPath}/adminmenu">Admin menu</a>
-</div>
-
-<jsp:include page="/WEB-INF/jsp/_current_user.jsp"></jsp:include>
-
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_menu.jsp"></jsp:include>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_current_user.jsp"></jsp:include>
 <div>
     All user profile
 </div>
-<table border=1>
-    <thead>
-    <tr>
-        <th>User Id</th>
-        <th>Login</th>
-        <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${users}" var="user">
-        <tr>
-            <td><c:out value="${user.longId.id}" /></td>
-            <td><c:out value="${user.login}" /></td>
-            <td><c:out value="${user.role}" /></td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
+<c:choose>
+    <c:when test="${not empty users}">
+        <table  class="table table-striped">
+            <thead>
+            <tr>
+                <th>User Id</th>
+                <th>Login</th>
+                <th>Role</th>
+                <td></td>
+            </tr>
+            </thead>
+            <c:forEach var="user" items="${users}">
+                <c:set var="classSucess" value=""/>
+                <c:if test ="${userId == user.longId.id}">
+                    <c:set var="classSucess" value="info"/>
+                </c:if>
+                <tr class="${classSucess}">
+                    <td><c:out value="${user.longId.id}" /></td>
+                    <td><c:out value="${user.login}" /></td>
+                    <td><c:out value="${user.role}" /></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:when>
+</c:choose>
 
-<form action="${pageContext.request.contextPath}/logout" method="POST" class="form">
-    <fieldset>
-        <div class="form-group">
-            <input type="submit" value="Log out">
-        </div>
-    </fieldset>
-</form>
 
-<jsp:include page="/WEB-INF/jsp/_message_box.jsp"></jsp:include>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_message_box.jsp"></jsp:include>
 
 </body>
 </html>
