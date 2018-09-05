@@ -18,11 +18,11 @@ import java.io.IOException;
 /**
  * Check authentication
  */
-@WebFilter(filterName = "Security", urlPatterns = {"/signup", "/signin", "/mainmenu", "/adminmenu", "/adduser", "/deleteuser", "/updateuser"})
+@WebFilter(filterName = "Security", urlPatterns = {"/signup", "/signin", "/mainmenu", "/adminmenu", "/adduser", "/deleteuser", "/updateuser", "/userinfo"})
 public class SecurityFilter implements Filter {
     private AccountService accountService;
     static final Logger LOGGER = LogManager.getLogger(SecurityFilter.class.getName());
-    public static final String[] URLS = {"/signup", "/signin", "/mainmenu", "/adminmenu", "/adduser", "/deleteuser", "/updateuser"};
+    public static final String[] URLS = {"/signup", "/signin", "/mainmenu", "/adminmenu", "/adduser", "/deleteuser", "/updateuser", "/userinfo"};
 
 
     @Override

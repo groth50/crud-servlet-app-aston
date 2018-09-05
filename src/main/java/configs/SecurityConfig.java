@@ -25,6 +25,7 @@ public class SecurityConfig {
         List<String> urlPatternsUser = new ArrayList<String>();
 
         urlPatternsUser.add("/mainmenu");
+        urlPatternsUser.add("/userinfo");
 
         mapConfig.put(UserAccount.Role.USER, urlPatternsUser);
 
@@ -36,6 +37,7 @@ public class SecurityConfig {
         urlPatternsAdmin.add("/adduser");
         urlPatternsAdmin.add("/deleteuser");
         urlPatternsAdmin.add("/updateuser");
+        urlPatternsAdmin.add("/userinfo");
 
         mapConfig.put(UserAccount.Role.ADMIN, urlPatternsAdmin);
     }
