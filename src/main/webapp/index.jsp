@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<h2> Hello World! </h2>
+<h3> Please, <a href="${pageContext.request.contextPath}/signin"> sign in </a> or <a href="${pageContext.request.contextPath}/signup">register</a>
+    for an account and go to the <a href="${pageContext.request.contextPath}/mainmenu"> main menu. </a> </h3>
 <jsp:include page="/WEB-INF/jsp/_message_box.jsp"></jsp:include>
 </body>
 </html>

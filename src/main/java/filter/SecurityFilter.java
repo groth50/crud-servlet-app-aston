@@ -17,6 +17,8 @@ import java.io.IOException;
 
 /**
  * Check authentication
+ * SecurityFilter является Servlet Filter, который выполняет проверки всех запросов к защищенным страницам перед тем,
+ * как позволить получить к ним доступ
  */
 @WebFilter(filterName = "Security", urlPatterns = {"/signup", "/signin", "/mainmenu", "/adminmenu", "/adduser", "/deleteuser", "/updateuser", "/userinfo"})
 public class SecurityFilter implements Filter {

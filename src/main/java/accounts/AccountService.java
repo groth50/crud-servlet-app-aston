@@ -3,6 +3,9 @@ package accounts;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * Интерфейс для взаимодействия с аккаунтами пользователей и хранением их сессий
+ */
 public interface AccountService {
 
     void addNewUser(String login, String password);
