@@ -6,6 +6,7 @@ import utils.LongId;
 
 import javax.servlet.FilterChain;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,20 +14,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 
-public class ServletWebTest {
-    public static final LongId<UserAccount> DEFAULT_ID = new LongId<>(-1);
+public class ConfigServletTest {
+    public static final LongId<UserAccount> DEFAULT_LONG_ID = new LongId<>(1);
+    public static final String DEFAULT_STRING_ID = String.valueOf(DEFAULT_LONG_ID.getId());
     public static final String DEFAULT_LOGIN = "Test";
     public static final String UNREGISTERED_LOGIN = "Unregistered";
     public static final String DEFAULT_PASSWORD = "123";
     public static final String UNREGISTERED_PASSWORD = "666";
+    public static final String DEFAULT_STRING_ROlE = "USER";
     public static final String DEFAULT_SESSION_ID = "123";
     public static final String UNREGISTERED_SESSION_ID = "-123";
-    public static final UserAccount DEFAULT_USER = getNewUserAccount(DEFAULT_ID, DEFAULT_LOGIN, DEFAULT_PASSWORD);
-    public static final UserAccount DEFAULT_ADMIN = getNewAdminAccount(DEFAULT_ID, DEFAULT_LOGIN, DEFAULT_PASSWORD);
+    public static final String CONTEXT_PATH = "";
+    public static final UserAccount.Role DEFAULT_ROLE = UserAccount.Role.valueOf(DEFAULT_STRING_ROlE);
+    public static final UserAccount DEFAULT_USER = getNewUserAccount(DEFAULT_LONG_ID, DEFAULT_LOGIN, DEFAULT_PASSWORD);
+    public static final UserAccount DEFAULT_ADMIN = getNewAdminAccount(DEFAULT_LONG_ID, DEFAULT_LOGIN, DEFAULT_PASSWORD);
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected RequestDispatcher dispatcher;
+    protected ServletContext servletContext;
     protected AccountService accountService;
     protected HttpSession session;
     protected FilterChain chain;
@@ -38,6 +44,7 @@ public class ServletWebTest {
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
         dispatcher = Mockito.mock(RequestDispatcher.class);
+        servletContext = Mockito.mock(ServletContext.class);
         accountService = Mockito.mock(AccountService.class);
         session = Mockito.mock(HttpSession.class);
         chain = Mockito.mock(FilterChain.class);

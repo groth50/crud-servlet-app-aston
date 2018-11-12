@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GetAdminMenuServletTest extends ServletWebTest {
+public class GetAdminMenuServletTest extends ConfigServletTest {
     private GetAdminMenuServlet servlet;
 
     @Before
@@ -27,6 +27,7 @@ public class GetAdminMenuServletTest extends ServletWebTest {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        servlet = null;
     }
 
     @Test

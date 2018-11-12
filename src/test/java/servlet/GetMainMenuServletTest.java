@@ -14,7 +14,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GetMainMenuServletTest extends ServletWebTest {
+public class GetMainMenuServletTest extends ConfigServletTest {
     private GetMainMenuServlet servlet;
 
     @Before
@@ -30,6 +30,7 @@ public class GetMainMenuServletTest extends ServletWebTest {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        servlet = null;
     }
 
     @Test
@@ -43,9 +44,5 @@ public class GetMainMenuServletTest extends ServletWebTest {
 
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(dispatcher).forward(request, response);
-    }
-
-    private static UserAccount getNewUserAccount(LongId<UserAccount> id, String login, String password) {
-        return new UserAccount(id, login, password);
     }
 }

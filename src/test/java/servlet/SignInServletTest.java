@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+
+import database.DBException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +13,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
-public class SignInServletTest extends ServletWebTest {
+public class SignInServletTest extends ConfigServletTest {
     private SignInServlet servlet;
 
     @Before
@@ -27,6 +29,7 @@ public class SignInServletTest extends ServletWebTest {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        servlet = null;
     }
 
     @Test
@@ -40,12 +43,13 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testNullLogin()
+    public void testDoPostNullLogin()
             throws ServletException, IOException {
         when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn(null);
         when(request.getParameter("password")).thenReturn(DEFAULT_PASSWORD);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
 
         servlet.doPost(request, response);
 
@@ -54,12 +58,13 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testNullPassword()
+    public void testDoPostNullPassword()
             throws ServletException, IOException {
         when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn(DEFAULT_LOGIN);
         when(request.getParameter("password")).thenReturn(null);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
 
         servlet.doPost(request, response);
 
@@ -68,12 +73,13 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testEmptyLogin()
+    public void testDoPostEmptyLogin()
             throws ServletException, IOException {
         when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn("");
         when(request.getParameter("password")).thenReturn(DEFAULT_PASSWORD);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
 
         servlet.doPost(request, response);
 
@@ -82,12 +88,13 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testEmptyPassword()
+    public void testDoPostEmptyPassword()
             throws ServletException, IOException {
         when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn(DEFAULT_LOGIN);
         when(request.getParameter("password")).thenReturn("");
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
 
         servlet.doPost(request, response);
 
@@ -96,11 +103,12 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testDoPostIncorrectLogin() throws ServletException, IOException {
+    public void testDoPostIncorrectLogin() throws ServletException, IOException, DBException {
         when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn(UNREGISTERED_LOGIN);
         when(request.getParameter("password")).thenReturn(DEFAULT_PASSWORD);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
         when(accountService.getUserByLogin(UNREGISTERED_LOGIN)).thenReturn(null);
 
         servlet.doPost(request, response);
@@ -110,11 +118,12 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testDoPostIncorrectPassword() throws ServletException, IOException {
+    public void testDoPostIncorrectPassword() throws ServletException, IOException, DBException {
         when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn(DEFAULT_LOGIN);
         when(request.getParameter("password")).thenReturn(UNREGISTERED_PASSWORD);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
         when(accountService.getUserByLogin(DEFAULT_LOGIN)).thenReturn(DEFAULT_USER);
 
         servlet.doPost(request, response);
@@ -124,16 +133,33 @@ public class SignInServletTest extends ServletWebTest {
     }
 
     @Test
-    public void testDoPostCorrect() throws ServletException, IOException {
-        when(request.getRequestDispatcher(GetMainMenuServlet.PATH)).thenReturn(dispatcher);
+    public void testDoPostExceptionWhenCheckUser() throws ServletException, IOException, DBException {
+        when(request.getRequestDispatcher(SignInServlet.PATH)).thenReturn(dispatcher);
+        when(request.getSession()).thenReturn(session);
         when(request.getParameter("login")).thenReturn(DEFAULT_LOGIN);
         when(request.getParameter("password")).thenReturn(DEFAULT_PASSWORD);
-        when(accountService.getUserByLogin(DEFAULT_LOGIN)).thenReturn(DEFAULT_USER);
-        when(request.getSession()).thenReturn(session);
-        when(session.getId()).thenReturn(DEFAULT_SESSION_ID);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
+        when(accountService.getUserByLogin(DEFAULT_LOGIN)).thenThrow(new DBException("getUserByLogin"));
 
         servlet.doPost(request, response);
 
-        verify(response).sendRedirect(request.getContextPath() + GetMainMenuServlet.URL);
+        verify(response).setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        verify(dispatcher).forward(request, response);
+    }
+
+    @Test
+    public void testDoPostCorrect() throws ServletException, IOException, DBException {
+        when(request.getRequestDispatcher(GetMainMenuServlet.PATH)).thenReturn(dispatcher);
+        when(request.getParameter("login")).thenReturn(DEFAULT_LOGIN);
+        when(request.getParameter("password")).thenReturn(DEFAULT_PASSWORD);
+        when(request.getParameter("role")).thenReturn(DEFAULT_STRING_ROlE);
+        when(accountService.getUserByLogin(DEFAULT_LOGIN)).thenReturn(DEFAULT_USER);
+        when(request.getSession()).thenReturn(session);
+        when(session.getId()).thenReturn(DEFAULT_SESSION_ID);
+        when(request.getContextPath()).thenReturn(CONTEXT_PATH);
+
+        servlet.doPost(request, response);
+
+        verify(response).sendRedirect(CONTEXT_PATH + GetMainMenuServlet.URL);
     }
 }

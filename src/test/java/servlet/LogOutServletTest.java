@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class LogOutServletTest extends ServletWebTest {
+public class LogOutServletTest extends ConfigServletTest {
     private LogOutServlet servlet;
 
     @Before
@@ -26,15 +26,17 @@ public class LogOutServletTest extends ServletWebTest {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        servlet = null;
     }
     @Test
-    public void testDoPostLogOut() throws ServletException, IOException {
+    public void testDoPost() throws ServletException, IOException {
         when(request.getSession()).thenReturn(session);
         when(session.getId()).thenReturn(DEFAULT_SESSION_ID);
+        when(request.getContextPath()).thenReturn(CONTEXT_PATH);
 
         servlet.doPost(request, response);
 
         verify(accountService).deleteSession(DEFAULT_SESSION_ID);
-        verify(response).sendRedirect(request.getContextPath() + SignInServlet.URL);
+        verify(response).sendRedirect(CONTEXT_PATH + SignInServlet.URL);
     }
 }

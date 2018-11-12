@@ -9,11 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GetUserInfoServletTest extends ServletWebTest {
+public class GetUserInfoServletTest extends ConfigServletTest {
     private GetUserInfoServlet servlet;
 
     @Before
@@ -29,6 +28,7 @@ public class GetUserInfoServletTest extends ServletWebTest {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        servlet = null;
     }
 
     @Test
