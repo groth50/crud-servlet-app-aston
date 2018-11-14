@@ -3,6 +3,7 @@ package servlet;
 import accounts.AccountService;
 import accounts.FactoryAccountService;
 import accounts.UserAccount;
+import database.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.PageMessageUtil;
@@ -49,8 +50,9 @@ public class AddUserServlet extends HttpServlet {
         PageMessageUtil.clearPageMessageForDoPost(request);
         String login = request.getParameter("login");
         String password = request.getParameter("password");
+        String role = request.getParameter("role");
 
-        if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
+        if (login == null || password == null || role == null || login.isEmpty() || password.isEmpty() || role.isEmpty()) {
             LOGGER.debug("null login");
             response.setContentType("text/html;charset=utf-8");
             request.setAttribute("errorMessage", "Please, insert login and password");
@@ -59,9 +61,32 @@ public class AddUserServlet extends HttpServlet {
             return;
         }
 
-        UserAccount profile = accountService.getUserByLogin(login);
+        UserAccount profile = null;
+        try {
+            profile = accountService.getUserByLogin(login);
+        } catch (DBException e) {
+            LOGGER.error(e.toString());
+            response.setContentType("text/html;charset=utf-8");
+            request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            request.getRequestDispatcher(PATH).forward(request, response);
+            return;
+        }
         if (profile == null) {
-            accountService.addNewUser(login, password);
+            UserAccount.Role userRole = UserAccount.Role.valueOf(role.toUpperCase());
+            if (userRole == null) {
+                userRole = UserAccount.Role.USER;
+            }
+            try {
+                accountService.addNewUser(login, password, userRole);
+            } catch (DBException e) {
+                LOGGER.error(e.toString());
+                response.setContentType("text/html;charset=utf-8");
+                request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                request.getRequestDispatcher(PATH).forward(request, response);
+                return;
+            }
             request.getSession().setAttribute("successMessage", "Add user successful!");
             response.sendRedirect(request.getContextPath() + GetAdminMenuServlet.URL);
             return;
@@ -71,6 +96,6 @@ public class AddUserServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         request.setAttribute("errorMessage", "Login already exist. Please, choose another login.");
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        request.getRequestDispatcher(request.getContextPath() + PATH).forward(request, response);
+        request.getRequestDispatcher(PATH).forward(request, response);
     }
 }

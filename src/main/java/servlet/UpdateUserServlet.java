@@ -3,6 +3,7 @@ package servlet;
 import accounts.AccountService;
 import accounts.FactoryAccountService;
 import accounts.UserAccount;
+import database.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.PageMessageUtil;
@@ -40,24 +41,42 @@ public class UpdateUserServlet extends HttpServlet {
 
         PageMessageUtil.clearPageMessageForDoGet(request);
         //check param from page
-        String login = request.getParameter("login");
-        if (login == null) {
-            request.setAttribute("errorMessage", "Incorrect login.");
+        String id = request.getParameter("id");
+        int idNum = 0;
+        try {
+             idNum = Integer.parseInt(id);
+        } catch (NumberFormatException ignore) {
+
+        }
+        if (idNum <= 0) {
+            request.setAttribute("errorMessage", "Incorrect id.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             request.getRequestDispatcher(GetAdminMenuServlet.PATH).forward(request, response);
             return;
         }
-        //check login in base
+        //check ID in base
         //todo: убрать пароль из полей
-        UserAccount user = accountService.getUserByLogin(login);
-        if (user == null) {
+        UserAccount profile = null;
+        try {
+            profile = accountService.getUserById(id);
+        } catch (DBException e) {
+            LOGGER.error(e.toString());
+            response.setContentType("text/html;charset=utf-8");
+            request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            request.getRequestDispatcher(PATH).forward(request, response);
+            return;
+        }
+        if (profile == null) {
+            LOGGER.debug("doGet from " + this.getClass().getSimpleName() + " Null pdofile");
             request.setAttribute("errorMessage", "User not found.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             request.getRequestDispatcher(GetAdminMenuServlet.PATH).forward(request, response);
             return;
         }
 
-        request.setAttribute("user", user);
+        request.getServletContext().setAttribute("user", profile);
+        //для автоматического выбора нужной роли, в jsp сравнивается текущая роль с заданными здесь ролями
         request.setAttribute("adminRole", UserAccount.Role.ADMIN);
         request.setAttribute("userRole", UserAccount.Role.USER);
         response.setStatus(HttpServletResponse.SC_OK);
@@ -69,31 +88,49 @@ public class UpdateUserServlet extends HttpServlet {
         LOGGER.debug("doPost from " + this.getClass().getSimpleName());
         PageMessageUtil.clearPageMessageForDoPost(request);
         String newLogin = request.getParameter("login");
-        String password = request.getParameter("password");
+        String newPassword = request.getParameter("password");
         String roleString = request.getParameter("role");
 
-        if (newLogin == null || password == null || roleString == null || newLogin.isEmpty() || password.isEmpty() || roleString.isEmpty()) {
+        UserAccount user = (UserAccount) request.getServletContext().getAttribute("user");
+        if (user == null) {
+            response.setContentType("text/html;charset=utf-8");
+            request.getSession().setAttribute("errorMessage", "Sorry, we didn't find this user.");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.sendRedirect(request.getContextPath() + GetAdminMenuServlet.URL);
+            return;
+        }
+
+        if (newLogin == null || newPassword == null || roleString == null || newLogin.isEmpty() || newPassword.isEmpty() || roleString.isEmpty()) {
             response.setContentType("text/html;charset=utf-8");
             request.setAttribute("errorMessage", "Please, insert correct login, role and password");
-            UserAccount user = accountService.getUserByLogin(request.getParameter("oldLogin")); //при вводе неправильных данных заполняем поля как было
+
+            //при вводе неправильных данных заполняем поля как было
             request.setAttribute("user", user);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             request.getRequestDispatcher(PATH).forward(request, response);
             return;
         }
+        request.getServletContext().removeAttribute("user");
 
-        String oldLogin = request.getParameter("oldLogin");
-
-        UserAccount user = accountService.getUserByLogin(oldLogin);
         user.setLogin(newLogin);
-        user.setPassword(password);
-        if (roleString != null) {
-            UserAccount.Role role = UserAccount.Role.valueOf(roleString.toUpperCase());
-            user.setRole(role);
+        user.setPassword(newPassword);
+        UserAccount.Role role = UserAccount.Role.valueOf(roleString.toUpperCase());
+        user.setRole(role);
+
+        try {
+            accountService.updateUser(user);
+        } catch (DBException e) {
+            LOGGER.error(e);
+            response.setContentType("text/html;charset=utf-8");
+            request.getSession().setAttribute("errorMessage", "Sorry, we have problems with server."
+                    + e.getMessage() + "Try again.");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            response.sendRedirect(request.getContextPath() + GetAdminMenuServlet.URL);
+            return;
         }
 
         response.setContentType("text/html;charset=utf-8");
-        request.setAttribute("successMessage", "Update successful");
+        request.getSession().setAttribute("successMessage", "Update successful");
         response.setStatus(HttpServletResponse.SC_OK);
         response.sendRedirect(request.getContextPath() + GetAdminMenuServlet.URL);
     }

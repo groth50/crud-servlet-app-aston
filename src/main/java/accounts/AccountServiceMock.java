@@ -1,14 +1,13 @@
 package accounts;
 
+import database.DBException;
 import utils.LongId;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-//todo: завязать через DAO
 public class AccountServiceMock implements AccountService {
     private final Map<String, UserAccount> loginToProfile;
     private final Map<String, UserAccount> sessionIdToProfile;
@@ -27,17 +26,26 @@ public class AccountServiceMock implements AccountService {
     }
 
     @Override
+    public void addNewUser(String login, String password, UserAccount.Role role) throws DBException {
+        loginToProfile.put(login, new UserAccount(new LongId<UserAccount>(id.incrementAndGet()), login, password, role));
+
+    }
+
+    @Override
     public void deleteUser(String login) {
         loginToProfile.remove(login);
     }
 
+    @Override
+    public void updateUser(UserAccount user) throws DBException {
+    }
 
     @Override
     public UserAccount getUserByLogin(String login) {
         return loginToProfile.get(login);
     }
 
-    //todo: реализовать
+    @Override
     public UserAccount getUserById(String id) { return null; }
 
     @Override

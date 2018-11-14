@@ -10,6 +10,7 @@ import java.io.IOException;
 import accounts.AccountService;
 import accounts.FactoryAccountService;
 import accounts.UserAccount;
+import database.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.PageMessageUtil;
@@ -60,7 +61,17 @@ public class SignInServlet extends HttpServlet {
             return;
         }
 
-        UserAccount profile = accountService.getUserByLogin(login);
+        UserAccount profile = null;
+        try {
+            profile = accountService.getUserByLogin(login);
+        } catch (DBException e) {
+            LOGGER.error(e.toString());
+            response.setContentType("text/html;charset=utf-8");
+            request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            request.getRequestDispatcher(PATH).forward(request, response);
+            return;
+        }
         if (profile == null || !profile.getPassword().equals(password)) {
             response.setContentType("text/html;charset=utf-8");
             request.setAttribute("errorMessage", "Invalid login or password");

@@ -29,6 +29,13 @@
             Password: <input type="password" name="password"/>
         </div>
         <div class="form-group">
+            Role:
+            <select name="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <div class="form-group">
             <input type="submit" value="Add user">
         </div>
     </fieldset>

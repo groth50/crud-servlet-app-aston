@@ -3,7 +3,7 @@ package filter;
 import accounts.UserAccount;
 import configs.SecurityConfig;
 import servlet.GetMainMenuServlet;
-import servlet.ServletWebTest;
+import servlet.ConfigServletTest;
 import servlet.SignInServlet;
 import servlet.SignUpServlet;
 
@@ -19,7 +19,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SecurityFilterTest extends ServletWebTest {
+public class SecurityFilterTest extends ConfigServletTest {
     private Filter filter;
 
     @Before

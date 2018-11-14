@@ -42,7 +42,7 @@
                         <c:set var="classSucess" value="info"/>
                     </c:if>
                     <tr class="${classSucess}">
-                        <td><a href="/updateuser?login=${user.login}"><c:out value="${user.longId.id}" /></a></td>
+                        <td><a href="/updateuser?id=${user.longId.id}"><c:out value="${user.longId.id}" /></a></td>
                         <td><c:out value="${user.login}" /></td>
                         <td><c:out value="${user.role}" /></td>
 

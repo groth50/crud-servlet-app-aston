@@ -3,6 +3,7 @@ package servlet;
 import accounts.AccountService;
 import accounts.FactoryAccountService;
 import accounts.UserAccount;
+import database.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.PageMessageUtil;
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 @WebServlet(name = "GetMainMenu", urlPatterns = "/mainmenu")
 public class GetMainMenuServlet extends HttpServlet {
@@ -43,7 +43,17 @@ public class GetMainMenuServlet extends HttpServlet {
 
         UserAccount currentUser = accountService.getUserBySessionId(request.getSession().getId());
 
-        Collection<UserAccount> users = accountService.getAllUsers();
+        Collection<UserAccount> users = null;
+        try {
+            users = accountService.getAllUsers();
+        } catch (DBException e) {
+            LOGGER.error(e.toString());
+            response.setContentType("text/html;charset=utf-8");
+            request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+            response.setStatus(HttpServletResponse.SC_OK);
+            request.getRequestDispatcher(PATH).forward(request, response);
+            return;
+        }
         request.setAttribute("currentUser", currentUser);
         request.setAttribute("users", users);
 

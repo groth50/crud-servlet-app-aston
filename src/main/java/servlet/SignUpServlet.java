@@ -3,6 +3,7 @@ package servlet;
 import accounts.AccountService;
 import accounts.FactoryAccountService;
 import accounts.UserAccount;
+import database.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.PageMessageUtil;
@@ -60,10 +61,31 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
-        UserAccount profile = accountService.getUserByLogin(login);
+        UserAccount profile = null;
+        //todo: вынести в отдельный метод?
+        try {
+            profile = accountService.getUserByLogin(login);
+        } catch (DBException e) {
+            LOGGER.error(e.toString());
+            response.setContentType("text/html;charset=utf-8"); //todo: сделать фильтр на кодировку
+            request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            request.getRequestDispatcher(PATH).forward(request, response);
+            return;
+        }
+
         if (profile == null) {
             LOGGER.debug("null profile");
-            accountService.addNewUser(login, password);
+            try {
+                accountService.addNewUser(login, password);
+            } catch (DBException e) {
+                LOGGER.error(e.toString());
+                response.setContentType("text/html;charset=utf-8");
+                request.setAttribute("errorMessage", "Sorry, we have problems with server. Try again.");
+                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                request.getRequestDispatcher(PATH).forward(request, response);
+                return;
+            }
             request.getSession().setAttribute("successMessage", "Sign up successful! Please, sign in.");
             response.sendRedirect(request.getContextPath() + SignInServlet.URL);
             return;
@@ -73,6 +95,6 @@ public class SignUpServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         request.setAttribute("errorMessage", "Login already exist. Please, choose another login.");
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        request.getRequestDispatcher(request.getContextPath() + PATH).forward(request, response);
+        request.getRequestDispatcher(PATH).forward(request, response);
     }
 }

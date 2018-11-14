@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import accounts.FactoryAccountService;
+import database.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,11 +38,34 @@ public class DeleteUserServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.debug("doPost from " + this.getClass().getSimpleName());
-        String login = request.getParameter("userLogin");
-        String Id = request.getParameter("userId");
+        String id = request.getParameter("userId");
+                int idNum = 0;
+        try {
+            idNum = Integer.parseInt(id);
+        } catch (NumberFormatException ignore) {
 
-        accountService.deleteUser(login);
+        }
+        if (idNum <= 0) {
+            request.setAttribute("errorMessage", "Incorrect id.");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            request.getRequestDispatcher(GetAdminMenuServlet.PATH).forward(request, response);
+            return;
+        }
+
+        try {
+            accountService.deleteUser(id);
+        } catch (DBException e) {
+            LOGGER.error(e);
+            response.setContentType("text/html;charset=utf-8");
+            request.getSession().setAttribute("errorMessage", "Sorry, we have problems with server."
+                    + e.getMessage() + "Try again.");
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            request.getRequestDispatcher(GetAdminMenuServlet.PATH).forward(request, response);
+            return;
+        }
+        response.setContentType("text/html;charset=utf-8");
+        request.getSession().setAttribute("successMessage", "Delete successful");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect(GetAdminMenuServlet.URL);
+        response.sendRedirect(request.getContextPath() + GetAdminMenuServlet.URL);
     }
 }
