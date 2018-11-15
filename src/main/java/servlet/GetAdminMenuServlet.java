@@ -42,6 +42,7 @@ public class GetAdminMenuServlet extends HttpServlet {
         PageMessageUtil.clearPageMessageForDoGet(request);
 
         UserAccount currentUser = accountService.getUserBySessionId(request.getSession().getId());
+        request.setAttribute("currentUser", currentUser);
 
         Collection<UserAccount> users = null;
         try {
@@ -54,7 +55,6 @@ public class GetAdminMenuServlet extends HttpServlet {
             request.getRequestDispatcher(PATH).forward(request, response);
             return;
         }
-        request.setAttribute("currentUser", currentUser);
         request.setAttribute("users", users);
 
         response.setStatus(HttpServletResponse.SC_OK);

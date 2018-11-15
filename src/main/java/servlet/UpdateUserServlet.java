@@ -40,6 +40,8 @@ public class UpdateUserServlet extends HttpServlet {
         LOGGER.debug("doGet from " + this.getClass().getSimpleName());
 
         PageMessageUtil.clearPageMessageForDoGet(request);
+        UserAccount currentUser = accountService.getUserBySessionId(request.getSession().getId());
+        request.setAttribute("currentUser", currentUser);
         //check param from page
         String id = request.getParameter("id");
         int idNum = 0;
