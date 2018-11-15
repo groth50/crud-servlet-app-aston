@@ -11,8 +11,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css">
-    <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
     <title>
         User info
     </title>
@@ -20,33 +18,27 @@
 <body>
 <jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_menu.jsp"></jsp:include>
 <div>
-    Your profile
+    <h3>Your profile</h3>
 </div>
-<div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>User Id</th>
-            <th>Login</th>
-            <th>Role</th>
-        </tr>
-        </thead>
-        <tr class="info">
-            <td><c:out value="${currentUser.longId.id}" /></td>
-            <td><c:out value="${currentUser.login}" /></td>
-            <td><c:out value="${currentUser.role}" /></td>
-            <td>
-                <form action="${pageContext.request.contextPath}/logout" method="POST" class="form">
-                    <fieldset>
-                        <div class="form-group">
-                            <input type="submit" value="Log out">
-                        </div>
-                    </fieldset>
-                </form>
-            </td>
-        </tr>
-    </table>
-
-</div>
+<form action="${pageContext.request.contextPath}/logout" method="POST" class="form">
+    <fieldset>
+        <div class="form-group">
+            ID: <input type="text" name="id" value="<c:out value="${currentUser.longId.id}" />"/>
+        </div>
+        <div class="form-group">
+            Login: <input type="text" name="login" value="<c:out value="${currentUser.login}" />"/>
+        </div>
+        <div class="form-group">
+            Role: <input type="text" name="role" value="<c:out value="${currentUser.role}" />"/>
+        </div>
+        <div class="form-group">
+            Password: <input type="text" name="password" value="<c:out value="${currentUser.password}" />"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Log out">
+        </div>
+    </fieldset>
+</form>
+<jsp:include page="/WEB-INF/jsp/_message_box.jsp"></jsp:include>
 </body>
 </html>

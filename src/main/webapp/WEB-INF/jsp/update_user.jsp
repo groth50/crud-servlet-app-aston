@@ -18,7 +18,6 @@
 <jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_current_user.jsp"></jsp:include>
 
 <form action="${pageContext.request.contextPath}/updateuser" method="POST" class="form">
-    <input type="hidden" name="oldLogin" value="<c:out value="${user.login}" />">
     <fieldset>
         <div class="form-group">
             Login: <input type="text" name="login" value="<c:out value="${user.login}" />"/>

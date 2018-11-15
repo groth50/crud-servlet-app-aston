@@ -19,7 +19,7 @@
 <jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_menu.jsp"></jsp:include>
 <jsp:include page="${pageContext.request.contextPath}/WEB-INF/jsp/_current_user.jsp"></jsp:include>
 <div>
-    All user profile
+    <h3>All user profile</h3>
 </div>
 <c:choose>
     <c:when test="${not empty users}">
