@@ -1,4 +1,3 @@
-1. Пишем под апач томкат. Под джетти отдельно приложение чибрикова. Здесь будет только КРУД с секьюрити фильтрами и базой посгрес или MySql
 
 Сделано:
 1. GetIndexPage
@@ -8,12 +7,10 @@
 5. GetMainMenu
 6. GetAdminMenu
 7. SecurityFilter
+8. AddUserServlet
+9. DeleteUserServlet
+10. UpdateUserServlet
 
-8. AddUserServlet - Create part
-9. DeleteUserServlet - Delete part
-10. UpdateUserServlet - Update part
-
-11. Сделать нормальный дизайн морды
 
 MySQL part:
 0. Добавить в AddUser выбор роли
