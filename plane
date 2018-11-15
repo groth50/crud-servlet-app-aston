@@ -8,6 +8,7 @@
 5. GetMainMenu
 6. GetAdminMenu
 7. SecurityFilter
+<<<<<<< Updated upstream
 
 8. AddUserServlet - Create part
 9. DeleteUserServlet - Delete part
@@ -182,3 +183,4 @@ https://prog.kiev.ua/forum/index.php?topic=1194.0
      Если пользователь успешно вошел в систему до этого, и получил доступ в защищенную страницу (page). Security Filter
       проверит подходят ли роли пользователей для доступа в эту страницу или нет. Если недействительно
       , он отобразит страницу оповещающую запрет доступа (Access Denied) пользователю.
+
