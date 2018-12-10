@@ -18,4 +18,5 @@ Uses technologies:
     Maven for project build and dependency management
     Servlet + JSP, JSTL for view and controller
     JDBC, JPA + Hibernate
+    IntelliJ IDEA
 
