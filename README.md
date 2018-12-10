@@ -19,4 +19,5 @@ Uses technologies:
     Servlet + JSP, JSTL for view and controller
     JDBC, JPA + Hibernate
     IntelliJ IDEA
+    Apache Tomcat
 
