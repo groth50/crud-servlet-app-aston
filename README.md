@@ -8,7 +8,7 @@ Branches:
     mysql_jdbc - web part and server side based on JDBC, myself ORM and MySQL.
     mysql_hibernate - web part and server side based on JDBC, JPA + Hibernate and MySQL.
 
-Plan new branches: Concurrent version, PostgreSQL, MyBatis, Async message system
+Plan for new branches: Concurrent version, PostgreSQL, MyBatis, Async message system
 
 Uses technologies:
 
