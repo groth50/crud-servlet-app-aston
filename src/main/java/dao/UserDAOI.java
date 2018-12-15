@@ -18,7 +18,7 @@ import java.util.List;
  *         Реализует команды DQL и DML. Является Object Relation Mapping.
  */
 public class UserDAOI implements UserDAO {
-    static final Logger LOGGER = LogManager.getLogger(UserDAO.class.getName());
+    static final Logger LOGGER = LogManager.getLogger(UserDAOI.class.getName());
     private Executor executor;
 
     public UserDAOI(Connection connection) {
