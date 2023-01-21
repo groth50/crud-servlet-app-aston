@@ -78,7 +78,7 @@ public class DBService {
     public void addNewUser(String login, String password, UserAccount.Role role) throws DBException {
         int rows = 0;
         try {
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false); //todo: concurrent
             rows = userDAO.insertUser(login, password, role.toString());
             if (rows == 0 || rows == -1) {
                 connection.setAutoCommit(true);
