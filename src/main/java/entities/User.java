@@ -7,6 +7,9 @@ public class User {
     private String userName;
     private long roleId;
 
+    public User() {
+    }
+
     public User(long userId, String userName) {
         this.userId = userId;
         this.userName = userName;

@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "User", urlPatterns = "/user")
+@WebServlet(name = "Role", urlPatterns = "/role")
 public class RoleServlet extends HttpServlet {
-    public static final String URL = "/user";
+    public static final String URL = "/role";
     static final Logger LOGGER = LogManager.getLogger(RoleServlet.class.getName());
     private RoleService roleService;
 
