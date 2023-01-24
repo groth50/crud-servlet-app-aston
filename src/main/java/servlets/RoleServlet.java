@@ -1,12 +1,12 @@
 package servlets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import database.DBService;
-import entities.User;
+import entities.Role;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import services.UserService;
+import services.RoleService;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,24 +15,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "User", urlPatterns = "/user")
-public class UserServlet extends HttpServlet {
+public class RoleServlet extends HttpServlet {
     public static final String URL = "/user";
-    static final Logger LOGGER = LogManager.getLogger(UserServlet.class.getName());
-    private UserService userService;
+    static final Logger LOGGER = LogManager.getLogger(RoleServlet.class.getName());
+    private RoleService roleService;
 
     private ObjectMapper mapper;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        this.userService = new UserService(DBService.getMysqlConnection());
+        this.roleService = new RoleService(DBService.getMysqlConnection());
         this.mapper = new ObjectMapper();
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        this.userService = null;
+        this.roleService = null;
         this.mapper = null;
     }
 
@@ -43,10 +43,10 @@ public class UserServlet extends HttpServlet {
         String userId = request.getParameter("id");
         String result;
         if (userId == null) {
-            result = mapper.writeValueAsString(userService.getAll());
+            result = mapper.writeValueAsString(roleService.getAll());
         } else {
-            User user = userService.get(Integer.parseInt(userId));
-            result = mapper.writeValueAsString(user);
+            Role role = roleService.get(Integer.parseInt(userId));
+            result = mapper.writeValueAsString(role);
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json; charset=UTF-8");
@@ -58,17 +58,17 @@ public class UserServlet extends HttpServlet {
         LOGGER.debug("doPost from " + this.getClass().getSimpleName());
         String body = getBody(request);
 
-        User user = mapper.readValue(body, User.class);
+        Role role = mapper.readValue(body, Role.class);
 
-        if (user.getUserName() == null || user.getUserName().isEmpty()) {
-            LOGGER.debug("null userName");
+        if (role.getRoleName() == null || role.getRoleName().isEmpty()) {
+            LOGGER.debug("null role name");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         try {
-            long userId = userService.create(user);
-            String result = mapper.writeValueAsString(user);
+            long roleId = roleService.create(role);
+            String result = mapper.writeValueAsString(role);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json; charset=UTF-8");
@@ -86,18 +86,18 @@ public class UserServlet extends HttpServlet {
         LOGGER.debug("doPut from " + this.getClass().getSimpleName());
         String body = getBody(request);
 
-        User user = mapper.readValue(body, User.class);
+        Role role = mapper.readValue(body, Role.class);
 
-        if (user.getUserName() == null || user.getUserName().isEmpty()) {
-            LOGGER.debug("null userName");
+        if (role.getRoleName() == null || role.getRoleName().isEmpty()) {
+            LOGGER.debug("null role name");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         try {
-            boolean isUpdated = userService.update(user);
+            boolean isUpdated = roleService.update(role);
             if (isUpdated) {
-                String result = mapper.writeValueAsString(user);
+                String result = mapper.writeValueAsString(role);
 
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json; charset=UTF-8");
@@ -117,16 +117,16 @@ public class UserServlet extends HttpServlet {
         String body = getBody(request);
 
 
-        User user = mapper.readValue(body, User.class);
+        Role role = mapper.readValue(body, Role.class);
 
-        if (user.getUserId() < 1) {
-            LOGGER.debug("haven't userId");
+        if (role.getRoleId() < 1) {
+            LOGGER.debug("haven't role id");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         try {
-            boolean isDeleted = userService.delete(user.getUserId());
+            boolean isDeleted = roleService.delete(role.getRoleId());
             if (isDeleted) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
