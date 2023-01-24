@@ -1,3 +1,3 @@
 
 
-Simple REST CRUD application for Aston, base on Servlet.
+Simple REST CRUD application for Aston, based on Servlet.
